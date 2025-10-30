@@ -41,7 +41,12 @@ window.addEventListener("DOMContentLoaded", () => {
   sortAllBtn.id = "sort-all-btn";
   sortAllBtn.type = "button";
   sortAllBtn.textContent = "Sort All";
-  app.append(sortOneBtn, sortAllBtn);
+
+  const clearAllBtn = document.createElement("button");
+  clearAllBtn.id = "clear-all-btn";
+  clearAllBtn.type = "button";
+  clearAllBtn.textContent = "Clear All";
+  app.append(sortOneBtn, sortAllBtn, clearAllBtn);
 
   // Lists container
   const lists = document.createElement("div");
@@ -52,10 +57,6 @@ window.addEventListener("DOMContentLoaded", () => {
     const heading = document.createElement("h2");
 
     heading.textContent = titleText + " ";
-    const countSpan = document.createElement("span");
-    countSpan.id = countId;
-    countSpan.textContent = "0";
-    heading.appendChild(countSpan);
 
     const listEl = document.createElement("p");
     listEl.id = listId;
@@ -65,9 +66,9 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 
   lists.append(
-    makeListSection("Bank (unsorted) - count: ", "Bank-list", "Bank-count"),
-    makeListSection("Odds - count: ", "Odds-list", "Odds-count"),
-    makeListSection("evens - count: ", "Evens-list", "Evens-count")
+    makeListSection("Bank:", "Bank-list", "Bank-count"),
+    makeListSection("Odds:", "Odds-list", "Odds-count"),
+    makeListSection("Evens: ", "Evens-list", "Evens-count")
   );
   app.appendChild(lists);
 
@@ -80,14 +81,6 @@ window.addEventListener("DOMContentLoaded", () => {
     if (bankEl) bankEl.textContent = numberBank.join(", ");
     if (oddsEl) oddsEl.textContent = odds.join(", ");
     if (evensEl) evensEl.textContent = evens.join(", ");
-
-    // Counts
-    const bankCount = document.getElementById("Bank-count");
-    const oddsCount = document.getElementById("Odds-count");
-    const evensCount = document.getElementById("Evens-count");
-    if (bankCount) bankCount.textContent = String(numberBank.length);
-    if (oddsCount) oddsCount.textContent = String(odds.length);
-    if (evensCount) evensCount.textContent = String(evens.length);
   }
 
   /* ===== HELPERS ===== */
@@ -121,6 +114,19 @@ window.addEventListener("DOMContentLoaded", () => {
     renderNumberBank();
   }
 
+  function sortAll() {
+    while (numberBank.length > 0) {
+      sortOne();
+    }
+  }
+
+  function clearAll() {
+    numberBank.length = 0;
+    odds.length = 0;
+    evens.length = 0;
+    renderNumberBank();
+  }
+
   /* ===== EVENTS ===== */
   form.addEventListener("submit", (e) => {
     e.preventDefault();
@@ -129,10 +135,9 @@ window.addEventListener("DOMContentLoaded", () => {
     form.reset();
     input.focus();
   });
-
-  while (numberBank.length > 0) sortOne();
   sortOneBtn.addEventListener("click", sortOne);
   sortAllBtn.addEventListener("click", sortAll);
+  clearAllBtn.addEventListener("click", clearAll);
 
   //initial render
   renderNumberBank();
